@@ -1,0 +1,9 @@
+
+RewriteEngine on
+Options -Indexes
+
+# Use PHP56
+<IfModule mod_suphp.c>
+    AddHandler application/x-httpd-php70 .php
+   suPHP_ConfigPath /home/manto638/php.ini  
+</IfModule>

@@ -1,0 +1,260 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="https://cdn.webdatarocks.com/latest/webdatarocks.min.css" rel="stylesheet" />
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="//unpkg.com/angular@1.6.5/angular.js"></script>
+<script src="//unpkg.com/@uirouter/angularjs@1.0.5/release/angular-ui-router.js"></script>
+
+<script src="https://cdn.webdatarocks.com/latest/webdatarocks.toolbar.min.js"></script>
+<script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
+<script src="https://code.highcharts.com/4.2.2/highcharts.js"></script>
+<script src="https://code.highcharts.com/4.2.2/highcharts-more.js"></script>
+<script src="https://cdn.webdatarocks.com/latest/webdatarocks.highcharts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  
+
+<body class="container-fluid" ng-app="app" ng-cloak>
+ <ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Rest data</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Pivot</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Chart</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent" ng-controller="Builder">
+  
+  <div class="tab-pane fade show active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+    <div class="row">
+       <ul class="nav nav-tabs col-12" id="myTab" role="tablist" ng-init="new=false">
+        <li class="nav-item" ng-click="new = false"><a class="nav-link active" >Existing</a></li>
+        <li class="nav-item" ng-click="new = true"> <a class="nav-link" id="home-tab" >New</a></li>
+      </ul>
+       <form ng-if="new" class="col-3">
+          <div class="form-group">
+            <input type="text" class="form-control form-control-sm col-9" ng-model="request.url" placeholder="URL">
+          </div>
+          <div class="form-group">
+            <select class="form-control form-control-sm" ng-model="request.method" >
+               <option value="" selected disabled>Method</option>
+               <option value="GET">GET</option>
+               <option value="GET">POST</option>
+            </select>
+          </div>
+
+          <div class="form-group ">
+            <textarea class="form-control form-control-sm" ng-model="request.headers" rows="3" placeholder=" Headers: \r\n Ex:{
+                'Authorization':'Basic xxxxxxxxxxxxx',
+                'X-CSRF-TOKEN':'xxxxxxxxxxxxxxxxxxxx',
+                'Content-Type':'application/json'
+            }">
+            </textarea>
+          </div>  
+
+          <div class="form-group ">
+            <label class="col-3">Body</label>
+            <textarea class="form-control form-control-sm col-9" ng-model="request.data" rows="3" placeholder="Body: \r\n Ex:{
+                'name':'John'
+            }">
+            </textarea>
+          </div>  
+
+          <div class="form-group ">
+            <input type="number" class="form-control form-control-sm" ng-model="request.refresh" placeholder="Refresh Loop Seconds">
+          </div>
+          <div class="form-group ">
+            <button class="btn btn-info" type="button" ng-click="updateData()">Load</button>
+          </div>
+          <div class="form-group ">
+            <button class="btn btn-success" type="button" ng-click="saveRequest(request)">Save</button>
+          </div>
+
+          
+        </form>
+        </form>
+       <div ng-if="!new" class="col-3">
+          <a ng-repeat="api in apis" ng-bind="api.data.url" ng-click="report.api_id = api.id; updateData(api.data)"></a>
+       </div> 
+       <div class="col-9" >
+          Valores
+          <table class=table> 
+            <tr >
+              <th ng-repeat="(row, key) in data[0]" ng-bind="row"></th>
+            </tr> 
+            <tr ng-repeat="row in data">
+              <td ng-repeat="val in row" ng-bind="val"></td>
+            </tr>
+         </table>
+       </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+    <div class="row">
+      <div class="col-9">
+            <div id="wdr-component">Select your configuration and click load</div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+    <div class="col-md-3">
+      <select name="" id="type-chart" onchange="createChart()">
+          <option value="arearange" >Area range</option>
+          <option value="areaspline" >Area-spline</option>
+          <option value="areasplinerange" >Area spline range</option>
+          <option value="area" >Basic area</option>
+          <option value="bar" >Basic bar</option>
+          <option value="column" >Basic column</option>
+          <option value="bubble" >Bubble chart</option>
+          <option value="columnrange" >Column range</option>
+          <option value="errorbar" >Error bar</option>
+          <option value="line" >Line chart</option>
+          <option value="funnel" >Funnel chart</option> 
+          <option value="pie" >Pie chart</option> 
+          <option value="polygon" >Polygon</option> 
+          <option value="pyramid" >Pyramid/option> 
+          <option value="scatter">Scatter plot</option> 
+          <option value="spline" >Spline/option> 
+          <option value="waterfall" >Waterfall</option> 
+        </select>
+        <button class="btn btn-info" type="button" ng-click="saveReport()">Save</button>
+      </div>
+      <div id="highchartsContainer" class="col-md-9"></div>
+  </div>
+</div>
+ 
+</div>
+
+<script>
+var pivot = null;
+  
+pivot = new WebDataRocks({
+      container: "#wdr-component",
+      toolbar: false,
+      report: {
+          "dataSource": {
+              "dataSourceType": "json",
+              "data": []
+          },
+          slice: {
+          }
+      },
+      reportcomplete: function() {
+          pivot.off("reportcomplete");
+          createChart();
+      }
+  });
+  
+function createChart() {
+    pivot.highcharts.getData({
+        type: $('#type-chart').val()
+    }, function(data) {
+        Highcharts.chart('highchartsContainer', data);
+    }, function(data) {
+        Highcharts.chart('highchartsContainer', data);
+    });
+}
+  
+// var getData = function(){
+//   var request = {
+//     url: $('#url').val(),
+//     method: $('#method').val(),
+//     headers: $('headers').val(),
+//     data: $('data').val(),
+//   }
+//   return $.ajax(request).then(function(data)
+//   {
+    
+//     pivot = new WebDataRocks({
+//         container: "#wdr-component",
+//         toolbar: true,
+//         report: {
+//             "dataSource": {
+//                 "dataSourceType": "json",
+//                 "data": data
+//             },
+//             slice: {
+//             }
+//         },
+//         reportcomplete: function() {
+//             pivot.off("reportcomplete");
+//             createChart();
+//         }
+//     });
+//   })
+// }
+
+// function updateData() {
+//   var request = {
+//     url: $('#url').val(),
+//     method: $('#method').val(),
+//     headers: $('headers').val(),
+//     data: $('data').val(),
+//   }
+//   return $.ajax(request).then(function(data)
+//   {
+//       pivot.updateData({
+//         data: data
+//       });
+//       return data;
+//   })
+// }
+
+  
+  angular.module('app', ['webdatarocks'])
+  .constant('pivot', pivot)
+  .controller('Builder', function($scope, pivot, $http){
+      $scope.report = {};
+      $scope.request = {};
+      $scope.data = [];
+      $scope.apis = [];
+      
+      $scope.loadApis = function(){
+        $http.get('./api.php/records/restapi_apis').then(function(json){ 
+          $scope.apis = json.data && json.data.records.map(function(i){ i.data = JSON.parse(i.data); return i; }) 
+        })
+      }
+      $scope.loadApis();
+    
+      $scope.updateData = function(req) {
+        if(req) $scope.request = req;
+        return $http($scope.request).then(function(json)
+        {
+            pivot.updateData({
+              data: json.data
+            });
+            $scope.data = json.data;
+            $scope.$apply()
+        })
+      }
+      
+      $scope.saveRequest = function(data){
+          if(data.id)
+             var rtn = $http.put('./api.php/records/restapi_apis/'+data.id, data)
+          else
+             var rtn = $http.post('./api.php/records/restapi_apis', {type: 'api', data: JSON.stringify(data)} )
+             
+          rtn.then(success, error)
+      }
+      
+      $scope.saveReport = function(){
+          $scope.report.config = JSON.stringify( pivot.getOptions() );
+          if($scope.report.id)
+             var rtn = $http.put('./api.php/records/restapi_reports/'+$scope.report.id, $scope.report )
+          else
+             var rtn = $http.post('./api.php/records/restapi_reports', $scope.report )
+             
+          rtn.then(success, error)
+      }
+      
+      function success(msg){ alert('Saved') }
+      function error(err){ alert('Error'+err.toString()) }
+  })
+  
+  
+
+</script>
