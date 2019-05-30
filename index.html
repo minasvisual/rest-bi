@@ -1,260 +1,123 @@
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<link href="https://cdn.webdatarocks.com/latest/webdatarocks.min.css" rel="stylesheet" />
+<!doctype html>
+<html lang="en">
 
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Jekyll v3.8.5">
+  <title>Dashboard Template · Bootstrap</title>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script src="//unpkg.com/angular@1.6.5/angular.js"></script>
-<script src="//unpkg.com/@uirouter/angularjs@1.0.5/release/angular-ui-router.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.13.0/pivot.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  <link href="assets/style.css" rel="stylesheet" />
 
-<script src="https://cdn.webdatarocks.com/latest/webdatarocks.toolbar.min.js"></script>
-<script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
-<script src="https://code.highcharts.com/4.2.2/highcharts.js"></script>
-<script src="https://code.highcharts.com/4.2.2/highcharts-more.js"></script>
-<script src="https://cdn.webdatarocks.com/latest/webdatarocks.highcharts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
 
-<body class="container-fluid" ng-app="app" ng-cloak>
- <ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Rest data</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Pivot</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Chart</a>
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent" ng-controller="Builder">
-  
-  <div class="tab-pane fade show active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-    <div class="row">
-       <ul class="nav nav-tabs col-12" id="myTab" role="tablist" ng-init="new=false">
-        <li class="nav-item" ng-click="new = false"><a class="nav-link active" >Existing</a></li>
-        <li class="nav-item" ng-click="new = true"> <a class="nav-link" id="home-tab" >New</a></li>
-      </ul>
-       <form ng-if="new" class="col-3">
-          <div class="form-group">
-            <input type="text" class="form-control form-control-sm col-9" ng-model="request.url" placeholder="URL">
-          </div>
-          <div class="form-group">
-            <select class="form-control form-control-sm" ng-model="request.method" >
-               <option value="" selected disabled>Method</option>
-               <option value="GET">GET</option>
-               <option value="GET">POST</option>
-            </select>
-          </div>
-
-          <div class="form-group ">
-            <textarea class="form-control form-control-sm" ng-model="request.headers" rows="3" placeholder=" Headers: \r\n Ex:{
-                'Authorization':'Basic xxxxxxxxxxxxx',
-                'X-CSRF-TOKEN':'xxxxxxxxxxxxxxxxxxxx',
-                'Content-Type':'application/json'
-            }">
-            </textarea>
-          </div>  
-
-          <div class="form-group ">
-            <label class="col-3">Body</label>
-            <textarea class="form-control form-control-sm col-9" ng-model="request.data" rows="3" placeholder="Body: \r\n Ex:{
-                'name':'John'
-            }">
-            </textarea>
-          </div>  
-
-          <div class="form-group ">
-            <input type="number" class="form-control form-control-sm" ng-model="request.refresh" placeholder="Refresh Loop Seconds">
-          </div>
-          <div class="form-group ">
-            <button class="btn btn-info" type="button" ng-click="updateData()">Load</button>
-          </div>
-          <div class="form-group ">
-            <button class="btn btn-success" type="button" ng-click="saveRequest(request)">Save</button>
-          </div>
-
-          
-        </form>
-        </form>
-       <div ng-if="!new" class="col-3">
-          <a ng-repeat="api in apis" ng-bind="api.data.url" ng-click="report.api_id = api.id; updateData(api.data)"></a>
-       </div> 
-       <div class="col-9" >
-          Valores
-          <table class=table> 
-            <tr >
-              <th ng-repeat="(row, key) in data[0]" ng-bind="row"></th>
-            </tr> 
-            <tr ng-repeat="row in data">
-              <td ng-repeat="val in row" ng-bind="val"></td>
-            </tr>
-         </table>
-       </div>
-    </div>
-  </div>
-  <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-    <div class="row">
-      <div class="col-9">
-            <div id="wdr-component">Select your configuration and click load</div>
-      </div>
-    </div>
-  </div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    <div class="col-md-3">
-      <select name="" id="type-chart" onchange="createChart()">
-          <option value="arearange" >Area range</option>
-          <option value="areaspline" >Area-spline</option>
-          <option value="areasplinerange" >Area spline range</option>
-          <option value="area" >Basic area</option>
-          <option value="bar" >Basic bar</option>
-          <option value="column" >Basic column</option>
-          <option value="bubble" >Bubble chart</option>
-          <option value="columnrange" >Column range</option>
-          <option value="errorbar" >Error bar</option>
-          <option value="line" >Line chart</option>
-          <option value="funnel" >Funnel chart</option> 
-          <option value="pie" >Pie chart</option> 
-          <option value="polygon" >Polygon</option> 
-          <option value="pyramid" >Pyramid/option> 
-          <option value="scatter">Scatter plot</option> 
-          <option value="spline" >Spline/option> 
-          <option value="waterfall" >Waterfall</option> 
-        </select>
-        <button class="btn btn-info" type="button" ng-click="saveReport()">Save</button>
-      </div>
-      <div id="highchartsContainer" class="col-md-9"></div>
-  </div>
-</div>
- 
-</div>
-
-<script>
-var pivot = null;
-  
-pivot = new WebDataRocks({
-      container: "#wdr-component",
-      toolbar: false,
-      report: {
-          "dataSource": {
-              "dataSourceType": "json",
-              "data": []
-          },
-          slice: {
-          }
-      },
-      reportcomplete: function() {
-          pivot.off("reportcomplete");
-          createChart();
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
       }
-  });
-  
-function createChart() {
-    pivot.highcharts.getData({
-        type: $('#type-chart').val()
-    }, function(data) {
-        Highcharts.chart('highchartsContainer', data);
-    }, function(data) {
-        Highcharts.chart('highchartsContainer', data);
+    }
+  </style>
+</head>
+
+<body ng-app="app">
+
+  <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
+    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+    <ul class="navbar-nav px-3">
+      <li class="nav-item text-nowrap">
+        <a class="nav-link" href="#">Sign out</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="container-fluid">
+
+    <div class="row">
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar" ng-controller="Nav">
+        <div class="sidebar-sticky">
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Dashboards</span>
+            <a class="d-flex align-items-center text-muted" href="#">
+            <span data-feather="plus-circle"></span>
+          </a>
+          </h6>
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="#!/">
+              <span data-feather="home"></span>
+              Home <span class="fa fa-columns"></span>
+            </a>
+            </li>
+
+            <li class="nav-item" ng-repeat="row in dashs">
+              <a class="nav-link" href="#!/dash/{{row.id}}">
+              <span data-feather="file"></span>
+              <span ng-bind="row.name"></span>
+            </a>
+            </li>
+
+          </ul>
+
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Reports</span>
+            <a class="d-flex align-items-center text-muted" href="#!/builder">
+            <span class="fa fa-plus"></span>
+          </a>
+          </h6>
+          <ul class="nav flex-column mb-2">
+
+            <li class="nav-item" ng-repeat="row in reports">
+              <a class="nav-link" href="#!/report/{{row.id}}">
+              <span class="fa fa-chart-line"></span> {{ row.chart }}
+            </a>
+            </li>
+
+          </ul>
+        </div>
+      </nav>
+
+      <main ui-view role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+      </main>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.22.0/pivot.min.js"></script>
+
+  <script src="//unpkg.com/angular@1.6.5/angular.js"></script>
+  <script src="//unpkg.com/@uirouter/angularjs@1.0.5/release/angular-ui-router.js"></script>
+
+  <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+  <script src="./app/plugins/plotly/plotly_renderers.js"></script>
+
+  <script src="https://pivottable.js.org/dist/gchart_renderers.js"></script>
+  <script src="https://www.google.com/jsapi"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script>
+    google.load("visualization", "1", {
+      packages: ["corechart", "charteditor"]
     });
-}
-  
-// var getData = function(){
-//   var request = {
-//     url: $('#url').val(),
-//     method: $('#method').val(),
-//     headers: $('headers').val(),
-//     data: $('data').val(),
-//   }
-//   return $.ajax(request).then(function(data)
-//   {
-    
-//     pivot = new WebDataRocks({
-//         container: "#wdr-component",
-//         toolbar: true,
-//         report: {
-//             "dataSource": {
-//                 "dataSourceType": "json",
-//                 "data": data
-//             },
-//             slice: {
-//             }
-//         },
-//         reportcomplete: function() {
-//             pivot.off("reportcomplete");
-//             createChart();
-//         }
-//     });
-//   })
-// }
+    var derivers = {};
+    var renderers = {};
+  </script>
+  <script src="app/app.js"></script>
 
-// function updateData() {
-//   var request = {
-//     url: $('#url').val(),
-//     method: $('#method').val(),
-//     headers: $('headers').val(),
-//     data: $('data').val(),
-//   }
-//   return $.ajax(request).then(function(data)
-//   {
-//       pivot.updateData({
-//         data: data
-//       });
-//       return data;
-//   })
-// }
-
-  
-  angular.module('app', ['webdatarocks'])
-  .constant('pivot', pivot)
-  .controller('Builder', function($scope, pivot, $http){
-      $scope.report = {};
-      $scope.request = {};
-      $scope.data = [];
-      $scope.apis = [];
-      
-      $scope.loadApis = function(){
-        $http.get('./api.php/records/restapi_apis').then(function(json){ 
-          $scope.apis = json.data && json.data.records.map(function(i){ i.data = JSON.parse(i.data); return i; }) 
-        })
-      }
-      $scope.loadApis();
-    
-      $scope.updateData = function(req) {
-        if(req) $scope.request = req;
-        return $http($scope.request).then(function(json)
-        {
-            pivot.updateData({
-              data: json.data
-            });
-            $scope.data = json.data;
-            $scope.$apply()
-        })
-      }
-      
-      $scope.saveRequest = function(data){
-          if(data.id)
-             var rtn = $http.put('./api.php/records/restapi_apis/'+data.id, data)
-          else
-             var rtn = $http.post('./api.php/records/restapi_apis', {type: 'api', data: JSON.stringify(data)} )
-             
-          rtn.then(success, error)
-      }
-      
-      $scope.saveReport = function(){
-          $scope.report.config = JSON.stringify( pivot.getOptions() );
-          if($scope.report.id)
-             var rtn = $http.put('./api.php/records/restapi_reports/'+$scope.report.id, $scope.report )
-          else
-             var rtn = $http.post('./api.php/records/restapi_reports', $scope.report )
-             
-          rtn.then(success, error)
-      }
-      
-      function success(msg){ alert('Saved') }
-      function error(err){ alert('Error'+err.toString()) }
-  })
-  
-  
-
-</script>
+</html>

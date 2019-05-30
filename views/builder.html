@@ -1,0 +1,101 @@
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="contact-tab" data-toggle="tab" data-target="#contact" role="tab" aria-controls="contact" aria-selected="false">Rest data</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="home-tab" data-toggle="tab" data-target="#home" role="tab" aria-controls="home" aria-selected="true">Pivot</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" role="tab" aria-controls="profile" aria-selected="false">Chart</a>
+    </li>
+  </ul>
+
+<div class="tab-content" id="myTabContent" >
+  
+  <div class="loading hide" ng-style="{'display':(loading?'block':'none')}" ><div class="load-content">Carregando</div></div>
+  
+  <div class="tab-pane fade show active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+    <div class="row">
+      <ul class="nav nav-tabs col-12" id="myTab" role="tablist" ng-init="new=false">
+        <li class="nav-item" ng-click="new = false"><a class="nav-link active" >Existing</a></li>
+        <li class="nav-item" ng-click="new = true"> <a class="nav-link" id="home-tab" >New</a></li>
+      </ul>
+       <form ng-if="new" class="col-3">
+          <div class="form-group">
+            <input type="text" class="form-control form-control-sm col-9" ng-model="request.name" placeholder="API Name">
+          </div>   
+         <div class="form-group">
+            <input type="text" class="form-control form-control-sm col-9" ng-model="request.url" placeholder="URL">
+          </div>
+          <div class="form-group">
+            <select class="form-control form-control-sm" ng-model="request.method" >
+               <option value="" selected disabled>Method</option>
+               <option value="GET">GET</option>
+               <option value="GET">POST</option>
+            </select>
+          </div>
+
+          <div class="form-group ">
+            <textarea class="form-control form-control-sm" ng-model="request.headers" rows="3" placeholder=" Headers: \r\n Ex:{
+                'Authorization':'Basic xxxxxxxxxxxxx',
+                'X-CSRF-TOKEN':'xxxxxxxxxxxxxxxxxxxx',
+                'Content-Type':'application/json'
+            }">
+            </textarea>
+          </div>  
+
+          <div class="form-group ">
+            <label class="col-3">Body</label>
+            <textarea class="form-control form-control-sm col-9" ng-model="request.data" rows="3" placeholder="Body: \r\n Ex:{
+                'name':'John'
+            }">
+            </textarea>
+          </div>  
+
+          <div class="form-group ">
+            <input type="number" class="form-control form-control-sm" ng-model="request.refresh" placeholder="Refresh Loop Seconds">
+          </div>
+          <div class="form-group ">
+            <button class="btn btn-info" type="button" ng-click="updateData()">Load</button>
+          </div>
+          <div class="form-group ">
+            <button class="btn btn-success" type="button" ng-click="saveRequest(request)">Save</button>
+          </div>
+
+          
+        </form>
+        </form>
+       <div ng-if="!new" class="list-group">
+          <a  class="list-group-item" ng-repeat="api in apis" ng-bind="api.name" ng-click="updateData(api)"></a>
+       </div> 
+       <div class="col-9" >
+          Valores
+          <table class=table> 
+            <tr >
+              <th ng-repeat="(row, key) in data[0]" ng-bind="row"></th>
+            </tr> 
+            <tr ng-repeat="row in data">
+              <td ng-repeat="val in row" ng-bind="val"></td>
+            </tr>
+         </table>
+       </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+    <div class="row">
+      <div class="col-9">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Report Name</span>
+              </div>
+              <input type="text" class="form-control" ng-model="report.chart">
+              <div class="input-group-append">
+                <button type="button" class="btn btn-success" ng-click="saveReport()">Save</button>
+              </div>
+            </div>
+            <div id="output">Select your configuration and click load</div>
+      </div>
+    </div>
+  </div>
+
+</div>

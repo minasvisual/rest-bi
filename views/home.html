@@ -1,0 +1,19 @@
+ <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Overview</h1>
+    <div class="input-group col-md-6 float-right">
+      <input type="text" ng-model="form.name" aria-label="Name" class="form-control form-control-sm">
+      <input type="text" ng-model="form.class" aria-label="Css Class" class="form-control form-control-sm">
+      <div class="input-group-append" id="button-addon4">
+        <button class="btn btn-sm btn-outline-secondary" ng-click="newDash(form)" type="button">Save</button>
+      </div>
+    </div>
+   
+ </div>
+
+<div class="row">
+  <div class="col-3">
+     <div class="list-group">
+       <a class="list-group-item" ng-repeat="row in reports" href="#!/dash/{{row.id}}" ng-bind="row.name"></a>
+     </div>
+  </div>
+</div>
