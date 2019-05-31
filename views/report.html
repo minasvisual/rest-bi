@@ -1,12 +1,21 @@
  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2" ng-bind="report.chart"></h1>
-    <div class="col-6 offset-6 text-right">
-      <div class="input-group ">
-        <div class="input-group-append" id="button-addon4">
-          <button class="btn btn-sm btn-outline-secondary btn-success" ng-click="save(report)" type="button">Save</button>
-          <button class="btn btn-sm btn-outline-secondary btn-danger" ng-click="delete(report)" type="button">Delete</button>
+    <div class="col-3" >
+      <input type="text" class="form-control" ng-model="reports.chart" placeholder="Report Name">
+    </div>  
+   <div class="col-3" >
+      <div class="input-group">
+         <select ng-model="api" class="form-control">
+            <option value="" selected disabled>Change Rest Source</option>
+            <option ng-repeat="row in apis" ng-value="row" ng-bind="row.name"></option>
+          </select>
+        <div class="input-group-append">
+          <button type="button" class="btn btn-sm btn-info" ng-click="reports.api_id=api.id;loadInstance({api_id: api})">Load</button>
         </div>
       </div>
+    </div>
+    <div class="col-6 text-right">
+          <button class="btn btn-sm btn-success" ng-click="saveReport(reports)" type="button">Save</button>
+          <button class="btn btn-sm btn-danger" ng-click="delete(reports)" type="button">Delete</button>
    </div>
    
 </div>

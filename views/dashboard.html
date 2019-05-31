@@ -1,5 +1,5 @@
  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Dashboard</h1>
+    <h1 class="h2" ng-bind="dash.name"></h1>
     <div class="col-6 text-right">
        
         <div class="input-group">
@@ -15,14 +15,14 @@
    
  </div>
 
- <div class="card-columns">
-    <div class="card" ng-repeat="row in reports"  ng-init="loadInstance(row)">
-      <div class="card-header" >
-        <span ng-bind="row.chart"></span> 
-        <a ng-click="forceRefresh(row)" ng-show="!instances['#table'+row.id]['interval']" class="p-1 float-right fa fa-sync-alt"></a>
-        <a ng-click="stopRefresh(row)" ng-hide="!instances['#table'+row.id]['interval']" class="p-1 float-right fa fa-ban"></a>
-      </div>
-      <div class="card-body" id="table{{row.id}}">
-      </div>
+ <div class="card-columns {{dash.class}}">
+  <div class="card" ng-repeat="row in reports"  ng-init="loadInstance(row)">
+    <div class="card-header" >
+      <span ng-bind="row.chart"></span> 
+      <a ng-click="forceRefresh(row)" ng-show="!instances['#table'+row.id]['interval']" class="p-1 float-right fa fa-sync-alt"></a>
+      <a ng-click="stopRefresh(row)" ng-hide="!instances['#table'+row.id]['interval']" class="p-1 float-right fa fa-ban"></a>
+    </div>
+    <div class="card-body" id="table{{row.id}}">
     </div>
   </div>
+</div>

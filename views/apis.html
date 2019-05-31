@@ -1,0 +1,79 @@
+ <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Rest Api Config</h1>
+    <div class="col-6 text-right">
+       
+        <div class="input-group">
+           <select ng-model="widget" class="form-control">
+              <option value="" selected disabled>Edit Api Rest</option>
+              <option ng-repeat="row in apis" ng-value="row" ng-bind="row.name"></option>
+            </select>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-sm btn-info" ng-click="request = widget">Edit</button>
+            <button type="button" class="btn btn-sm btn-success" ng-click="request = {};">New</button>
+          </div>
+        </div>
+   </div>
+ </div>
+
+<div class="row">
+  <div class="col-3">
+      <form class="" novalidate name="FORM" ng-class="{'was-validated': FORM.$dirty}">
+          <div class="form-group">
+            <input name="name" type="text" class="form-control form-control-sm" ng-model="request.name" placeholder="API Name" required
+                   ng-class="{'is-invalid': FORM.name.$invalid && FORM.name.$dirty}">
+          </div>   
+         <div class="form-group">
+            <input name="url" type="text" class="form-control form-control-sm" ng-model="request.url" placeholder="URL" required
+                   ng-class="{'is-invalid': FORM.url.$invalid && FORM.url.$dirty}" >
+          </div>   
+          <div class="form-group">
+            <input type="text" class="form-control form-control-sm" ng-model="request.root" placeholder="Root three (ex: records:[])">
+          </div>
+          <div class="form-group">
+            <select name="method" class="form-control form-control-sm" ng-model="request.method" required
+                    ng-class="{'is-invalid': FORM.method.$invalid && FORM.method.$dirty}">
+               <option value="" selected disabled>Method</option>
+               <option value="GET">GET</option>
+               <option value="GET">POST</option>
+            </select>
+          </div>
+
+          <div class="form-group ">
+            <textarea class="form-control form-control-sm" ng-model="request.headers" rows="3" placeholder=" Headers: \r\n Ex:{
+                'Authorization':'Basic xxxxxxxxxxxxx',
+                'X-CSRF-TOKEN':'xxxxxxxxxxxxxxxxxxxx',
+                'Content-Type':'application/json'
+            }">
+            </textarea>
+          </div>  
+
+          <div class="form-group ">
+            <label class="col-3">Body</label>
+            <textarea class="form-control form-control-sm" ng-model="request.data" rows="3" placeholder="Body: \r\n Ex:{
+                'name':'John'
+            }">
+            </textarea>
+          </div>  
+
+          <div class="form-group ">
+            <input type="number" class="form-control form-control-sm" ng-model="request.refresh" placeholder="Refresh Loop Seconds">
+          </div>
+          <div class="form-group ">
+            <button class="btn btn-info" type="button" ng-click="loadData()" ng-disabled="FORM.$invalid">Load Data</button>
+          </div>
+          <div class="form-group ">
+            <button class="btn btn-success" type="button" ng-click="saveRequest(request)" ng-disabled="FORM.$invalid">Save Api</button>
+          </div>
+        </form>
+  </div> 
+  <div class="col-9">
+     <table class=table> 
+        <tr >
+          <th ng-repeat="(row, key) in data[0]" ng-bind="row"></th>
+        </tr> 
+        <tr ng-repeat="row in data">
+          <td ng-repeat="val in row" ng-bind="val"></td>
+        </tr>
+     </table>
+  </div>
+</div>

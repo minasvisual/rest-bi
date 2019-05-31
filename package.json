@@ -1,0 +1,32 @@
+{
+  "name": "rest-bi",
+  "version": "1.0.0",
+  "description": "rest api connector to generate reports and analytics visions.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "@uirouter/angularjs": "^1.0.22",
+    "angular": "^1.7.8",
+    "bootstrap": "^4.3.1",
+    "jquery": "^1.11.2",
+    "lodash": "^4.17.11",
+    "pivottable": "^2.23.0",
+    "plotly.js-dist": "^1.48.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minasvisual/rest-bi.git"
+  },
+  "author": "Ulisses Mantovani",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/minasvisual/rest-bi/issues"
+  },
+  "homepage": "https://github.com/minasvisual/rest-bi#readme"
+}
