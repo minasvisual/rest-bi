@@ -9,20 +9,37 @@
             </select>
           <div class="input-group-append">
             <button type="button" class="btn btn-sm btn-success" ng-click="AddReports(widget.id)">Add</button>
+          </div> 
+          <div class="input-group-append">
+            <a href="#/builder" class="btn btn-link " >New</a>
           </div>
         </div>
    </div>
    
  </div>
 
- <div class="card-columns {{dash.class}}">
-  <div class="card" ng-repeat="row in reports"  ng-init="loadInstance(row)">
-    <div class="card-header" >
-      <span ng-bind="row.chart"></span> 
-      <a ng-click="forceRefresh(row)" ng-show="!instances['#table'+row.id]['interval']" class="p-1 float-right fa fa-sync-alt"></a>
-      <a ng-click="stopRefresh(row)" ng-hide="!instances['#table'+row.id]['interval']" class="p-1 float-right fa fa-ban"></a>
-    </div>
-    <div class="card-body" id="table{{row.id}}">
-    </div>
-  </div>
+ <div class="row {{dash.class}}">
+   
+  <div class="col-12" ng-if="reports && reports.length === 0" >You have no reports in this Dashboard.</div>
+   
+   <div class="col-{{ row.size || 3 }}  mb-3" ng-repeat="row in reports"  ng-init="loadInstance(row)">
+      <div class="card" >
+        <div class="card-header dropright" >
+          <span ng-bind="row.chart"></span> 
+          <a class="dropdown-toggle px-3 float-right" id="dropdownMenuReference" 
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+          </a>
+          <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuReference">
+            <a class="dropdown-item" href="#">Edit</a>
+            <a class="dropdown-item" ><input type="number" ng-model="row.size" max="12"></a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Delete</a>
+          </div>
+          <a ng-click="forceRefresh(row)" ng-show="!instances['#table'+row.id]['interval']" class="p-1 float-right fa fa-sync-alt"></a>
+          <a ng-click="stopRefresh(row)" ng-hide="!instances['#table'+row.id]['interval']" class="p-1 float-right fa fa-ban"></a>
+        </div>
+        <div class="card-body" id="table{{row.id}}">
+        </div>
+      </div>
+   </div>
 </div>

@@ -4,7 +4,7 @@
        
         <div class="input-group">
            <select ng-model="widget" class="form-control">
-              <option value="" selected disabled>Edit Api Rest</option>
+              <option ng-value="" value="" selected disabled>Edit Api Rest</option>
               <option ng-repeat="row in apis" ng-value="row" ng-bind="row.name"></option>
             </select>
           <div class="input-group-append">
@@ -56,7 +56,7 @@
           </div>  
 
           <div class="form-group ">
-            <input type="number" class="form-control form-control-sm" ng-model="request.refresh" placeholder="Refresh Loop Seconds">
+            <input string-to-number type="text" class="form-control form-control-sm" ng-model="request.refresh"  placeholder="Refresh Loop Seconds">
           </div>
           <div class="form-group ">
             <button class="btn btn-info" type="button" ng-click="loadData()" ng-disabled="FORM.$invalid">Load Data</button>

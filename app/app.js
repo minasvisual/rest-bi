@@ -1,5 +1,6 @@
-angular.module('app', ['ui.router'])
+angular.module('app', ['ui.router','ngResource'])
 .constant('lodash', _ )
+.constant('baseUrl', './api.php/records/' )
 .config(function($stateProvider, $urlRouterProvider){
   var helloState = {
     name: 'Home',
@@ -46,13 +47,18 @@ angular.module('app', ['ui.router'])
   $urlRouterProvider.otherwise('/');
 })
 
-.filter('trustUrl', ['$sce', function ($sce) {
-    return function(url) {
-      return $sce.trustAsResourceUrl(url);
-    };
-  }])
+.service('layout', function(){
+    var toggle = true;
+  
+    return{
+      toggle,
+      closeNav: function(){ return toggle = false; },
+      openNav: function(){ return toggle = true; }
+    }
+})
 
-.controller('Builder', function($scope, $http){
+
+.controller('Builder', function($scope, $http, lodash, $sce, DataModel){
     $scope.report = {};
     $scope.request = {};
     $scope.data = [];
@@ -69,8 +75,9 @@ angular.module('app', ['ui.router'])
 
     $scope.loadApis = function(){
       $scope.loading = true;
-      $http.get('./api.php/records/restbi_apis').then(function(json){ 
-        $scope.apis = json.data.records
+      DataModel.loadApis().query(function(json){ 
+        $scope.apis = json
+        $scope.apis.refresh = Number($scope.apis.refresh)
         $scope.loading = false
       })
     }
@@ -79,9 +86,11 @@ angular.module('app', ['ui.router'])
     $scope.updateData = function(req) {
       $scope.loading = true;
       if(req) $scope.request = req;
-      return $http($scope.request).then(function(json)
+      
+      if( !$scope.request.url || !$scope.request.method ){ $scope.loading = false; return; } 
+      return DataModel.loadSource($scope.request).then(function(json)
       {
-          $("#output").pivotUI(json.data, {
+          $("#output").pivotUI( json, {
               renderers: renderers,
               cols: [], rows: [],
               rendererName: "table",
@@ -89,9 +98,9 @@ angular.module('app', ['ui.router'])
           });
 
           $scope.report.api_id = $scope.request.id;
-          $scope.data = json.data;
+          $scope.data = json;
           $scope.loading = false;
-      })
+      },error)
     }
 
     $scope.saveRequest = function(data){
@@ -99,9 +108,12 @@ angular.module('app', ['ui.router'])
         if(data.id)
            var rtn = $http.put('./api.php/records/restbi_apis/'+data.id, data)
         else
-           var rtn = $http.post('./api.php/records/restbi_apis', {type: 'api', data: data} )
+           var rtn = $http.post('./api.php/records/restbi_apis', Object.assign({type:'api'},data) )
 
-        rtn.then(success, error).then(function(){ $scope.loading = false })
+        rtn.then(success, error).then(function(){ 
+          $scope.report.api_id = $scope.request.id; 
+          $scope.loading = false 
+        })
     }
 
     $scope.saveReport = function(){
@@ -117,11 +129,11 @@ angular.module('app', ['ui.router'])
         rtn.then(success, error).then(function(){ $scope.loading = false })
     }
 
-    function success(msg){ alert('Saved') }
-    function error(err){ alert('Error'+err.toString()) }
+    function success(msg){$scope.loading = false;  alert('Saved') }
+    function error(err){ $scope.loading = false; alert('Error'+err.toString()) }
 })
 
-.controller('Dash', function($scope, $http, $sce, $stateParams){
+.controller('Dash', function($scope, $http, $sce, $stateParams, lodash, DataModel){
     $scope.loading = false
     $scope.dash = {};
     $scope.allReports = [];
@@ -180,12 +192,8 @@ angular.module('app', ['ui.router'])
     }
 
     $scope.loadInstance = function(row){
-       $http({
-         method: row.api_id.method,
-         url: $sce.trustAsResourceUrl(row.api_id.url),
-         data: row.api_id.body,
-       }).then(function(json){
-          $scope.createInstance(row, json.data);
+       DataModel.loadSource(row.api_id).then(function(json){
+          $scope.createInstance(row, json );
        })
     }
     
@@ -208,7 +216,7 @@ angular.module('app', ['ui.router'])
     //$scope.loadApis();
 })
 
-.controller('Report', function($scope, $http, $stateParams, $location, $sce){
+.controller('Report', function($scope, $http, $stateParams, $location, $sce, lodash){
     $scope.apis = [];
     $scope.dashs = [];
     $scope.reports = [];
@@ -236,7 +244,7 @@ angular.module('app', ['ui.router'])
         json.data['records'][0].config = JSON.parse(json.data['records'][0].config);
         $scope.reports = json.data['records'][0]
         $scope.loadInstance($scope.reports)
-        $scope.loading = false
+        $scope.loading = false;
       })
     }      
     $scope.loadReport();
@@ -247,7 +255,7 @@ angular.module('app', ['ui.router'])
          url: $sce.trustAsResourceUrl(row.api_id.url),
          data: row.api_id.body,
        }).then(function(json){
-          $scope.createInstance(row, json.data);
+          $scope.createInstance(row, ( row.api_id.root ? lodash.get( json.data, row.api_id.root) : json.data) );
        })
     }
     
@@ -327,11 +335,18 @@ angular.module('app', ['ui.router'])
     function error(err){ alert('Error'+err.toString()) }
 })
 
-.controller('Nav', function($scope, $http){
+.controller('Nav', function($scope, $http, layout, $state){
     $scope.dashs = [];
     $scope.reports = [];
     $scope.loading = false;
     $scope.search = {};
+    $scope.layout = layout;
+  
+    $scope.$watch(function(){
+        return $state.$current.name +'/'+$state.params.id
+    }, function(newVal, oldVal){
+        if( $("body").innerWidth() < 728 ) $scope.layout.toggle = false;
+    }) 
   
     $scope.$watch('search.text', function(value, old){
       if( !value ){ $scope.search.results = null; return; }
@@ -382,3 +397,24 @@ angular.module('app', ['ui.router'])
       })
     }
 })
+
+
+.filter('trustUrl', ['$sce', function ($sce) {
+    return function(url) {
+      return $sce.trustAsResourceUrl(url);
+    };
+  }])
+
+.directive('stringToNumber', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModel) {
+      ngModel.$parsers.push(function(value) {
+        return '' + value;
+      });
+      ngModel.$formatters.push(function(value) {
+        return parseFloat(value);
+      });
+    }
+  };
+});

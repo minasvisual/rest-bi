@@ -12,7 +12,7 @@
   };
 
   callWithJQuery(function($, Plotly) {
-    var makePlotlyChart, makePlotlyScatterChart;
+    var makePlotlyChart, makePlotlyScatterChart, makePlotlyGaugeChart;
     makePlotlyChart = function(traceOptions, layoutOptions, transpose) {
       if (traceOptions == null) {
         traceOptions = {};
@@ -188,6 +188,129 @@
         return result;
       };
     };
+    makePlotlyGaugeChart = function(){
+      return function(pivotData, opts) {
+           // Enter a speed between 0 and 180
+            var colTotals = ( pivotData.colTotals && Object.values(pivotData.colTotals).length > 0 ? Object.values(pivotData.colTotals)[0]['count'] : 0 )
+            var rowsTotal = pivotData.allTotal.count;
+            var totalsPercent = ((colTotals * 100 ) / pivotData.allTotal.count ); // % de items
+        
+            var level = (180 * totalsPercent) / 100;
+            var levelBlock = pivotData.allTotal.count * 0.166;
+
+            // Trig to calc meter point
+            var degrees = 180 - level,  radius = .5;
+            var radians = degrees * Math.PI / 180;
+            var x = radius * Math.cos(radians);
+            var y = radius * Math.sin(radians);
+
+            // Path: may have to change to create a better triangle
+            var mainPath = 'M -.0 -0.025 L .0 0.025 L ',
+               pathX = String(x),
+               space = ' ',
+               pathY = String(y),
+               pathEnd = ' Z';
+            var path = mainPath.concat(pathX,space,pathY,pathEnd);
+
+            var data = [{ 
+              type: 'scatter',
+               x: [0], y:[0],
+              marker: {size: 28, color:'850000'},
+              showlegend: false,
+              name: pivotData.colAttrs.join("-"),
+              text: colTotals +' of '+ rowsTotal,
+              hoverinfo: 'text+name'
+            },
+            { values: [50/6, 50/6, 50/6, 50/6, 50/6, 50/6, 50],
+              rotation: 90,
+              text: [
+                ((rowsTotal-levelBlock*1).toFixed(0)+'-'+ rowsTotal.toFixed(0)), 
+                ((rowsTotal-levelBlock*1).toFixed(0)+'-'+(rowsTotal-levelBlock*2).toFixed(0)), 
+                ((rowsTotal-levelBlock*2).toFixed(0)+'-'+(rowsTotal-levelBlock*3).toFixed(0)), 
+                ((rowsTotal-levelBlock*3).toFixed(0)+'-'+(rowsTotal-levelBlock*4).toFixed(0)), 
+                ((rowsTotal-levelBlock*4).toFixed(0)+'-'+(rowsTotal-levelBlock*5).toFixed(0)), 
+                ((rowsTotal-levelBlock*5).toFixed(0)+'-'+(rowsTotal-levelBlock*6).toFixed(0)), 
+                ''
+              ],
+              textinfo: 'text',
+              textposition:'inside',	  
+              marker: {colors:['rgba(14, 127, 0, .5)', 'rgba(110, 154, 22, .5)',
+                       'rgba(170, 202, 42, .5)', 'rgba(202, 209, 95, .5)',
+                       'rgba(210, 206, 145, .5)', 'rgba(232, 226, 202, .5)',
+                       'rgba(255, 255, 255, 0)']},
+              labels: [ 
+                ((rowsTotal-levelBlock*1).toFixed(0)+'-'+ rowsTotal.toFixed(0)), 
+                ((rowsTotal-levelBlock*1).toFixed(0)+'-'+(rowsTotal-levelBlock*2).toFixed(0)), 
+                ((rowsTotal-levelBlock*2).toFixed(0)+'-'+(rowsTotal-levelBlock*3).toFixed(0)), 
+                ((rowsTotal-levelBlock*3).toFixed(0)+'-'+(rowsTotal-levelBlock*4).toFixed(0)), 
+                ((rowsTotal-levelBlock*4).toFixed(0)+'-'+(rowsTotal-levelBlock*5).toFixed(0)), 
+                ((rowsTotal-levelBlock*5).toFixed(0)+'-'+(rowsTotal-levelBlock*6).toFixed(0)), 
+                ''
+              ],
+              hoverinfo: 'label',
+              hovertext:'',
+              hole: .5,
+              type: 'pie',
+              showlegend: false
+            }];
+
+            var layout = {
+              shapes:[{
+                  type: 'path',
+                  path: path,
+                  fillcolor: '850000',
+                  line: {
+                    color: '850000'
+                  }
+                }],
+              title: pivotData.aggregatorName + ' vs ' + pivotData.colAttrs.join("-"),
+              width: window.innerWidth / 1.5,
+              height: window.innerHeight / 1.4 - 50,
+              xaxis: {
+                  zeroline:false, 
+                  showticklabels:false,
+                  showgrid: false, range: [-1, 1],
+//                   title:{ text: '<b>'+colTotals +'/'+ rowsTotal+'</b>', font: {size:24}  }
+              },
+              yaxis: {zeroline:false, showticklabels:false,
+                   showgrid: false, range: [-1, 1]}
+            };
+            var result = $("<div>").appendTo($("body"));
+           
+           // Plotly.newPlot('myDiv', data, layout, {showSendToCloud:true}); 
+            Plotly.newPlot(result[0], data, $.extend(layout, opts.plotly), opts.plotlyConfig);
+            var body = `
+               <div class="gauge-footer" style="width: calc(100% - 40px) !important;padding: 25px 15px;position: absolute; bottom: 100px; z-index: 999;"> 
+                    <h2 style="text-align:center;">
+                      ${colTotals +'/'+ rowsTotal} 
+                    </h2>
+               </div>
+           `;
+            result.append(body).detach();
+            return result;
+        };
+    };
+    var textKPI = function(){
+      return function(pivotData, opts) {
+          var colTotals = ( pivotData.colTotals && Object.values(pivotData.colTotals).length > 0 ? Object.values(pivotData.colTotals)[0]['count'] : 0 )
+          var rowsTotal = pivotData.allTotal.count;
+          var totalsPercent = ((colTotals * 100 ) / pivotData.allTotal.count ); // % de items
+
+          var level = (180 * totalsPercent) / 100;
+        
+         var body = `
+             <div class="kpi-wrap" style="width:100%; padding: 25px 15px;"> 
+                  <h2 style="text-align:center;color: #39afd1;">
+                    ${ colTotals || pivotData.allTotal.count } 
+                    <small style="color: #999;font-size: .6em;">${pivotData.colAttrs.join("-") || 'items'}</small>
+                  </h2>
+             </div>
+         `;
+        
+         var result = $("<div>").appendTo($("body")).html( body );
+         return result;
+      }
+    }
     return $.pivotUtilities.plotly_renderers = {
       "Horizontal Bar Chart": makePlotlyChart({
         type: 'bar',
@@ -216,6 +339,8 @@
         stackgroup: 1
       }),
       "Scatter Chart": makePlotlyScatterChart(),
+      "Gauge Chart":   makePlotlyGaugeChart(),
+      "KPI Text":   textKPI(),
       'Multiple Pie Chart': makePlotlyChart({
         type: 'pie',
         scalegroup: 1,

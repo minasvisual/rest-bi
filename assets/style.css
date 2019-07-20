@@ -73,6 +73,35 @@ body {
   text-transform: uppercase;
 }
 
+@media (max-width: 768px) {
+  .sidebar{
+    padding-top: 48px; /* Space for fixed navbar */
+    position: fixed !important;
+    width:80% !important;
+    left:0px;
+    right:20px;
+    -webkit-box-shadow: 6px 0px 51px -11px rgba(0,0,0,0.46);
+	-moz-box-shadow: 6px 0px 51px -11px rgba(0,0,0,0.46);
+	box-shadow: 6px 0px 51px -11px rgba(0,0,0,0.46);
+  }
+  .mobile-nav{
+    width: 20%;
+    height: 100%;
+    position: fixed;
+    background: #333;
+    z-index: 9999;
+    right: 0;
+    top: 0;
+    opacity: .3;
+  }
+   .navbar form{
+    width:50% !important;
+  }
+  [role="main"] {
+    padding-top: 48px !important; /* Space for fixed navbar */
+  }
+}
+
 /*
  * Content
  */

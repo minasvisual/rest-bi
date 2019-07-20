@@ -1,4 +1,5 @@
-<ul class="nav nav-tabs" id="myTab" role="tablist">
+<h3 align=center>Report Builder</h3>
+<!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item">
       <a class="nav-link active" id="contact-tab" data-toggle="tab" data-target="#contact" role="tab" aria-controls="contact" aria-selected="false">Rest data</a>
     </li>
@@ -8,33 +9,52 @@
     <li class="nav-item">
       <a class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" role="tab" aria-controls="profile" aria-selected="false">Chart</a>
     </li>
-  </ul>
-
+  </ul> -->
+<hr>
 <div class="tab-content" id="myTabContent" >
   
   <div class="loading hide" ng-style="{'display':(loading?'block':'none')}" ><div class="load-content">Carregando</div></div>
   
   <div class="tab-pane fade show active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
     <div class="row">
-        <ul class="nav nav-tabs col-12" id="myTab" role="tablist" ng-init="new=false">
+      <div class="col-6"><label class="my-1 mr-2">Select a Connection or Create New</label></div> 
+       <div class="col-6"> 
+          <div class="input-group">
+            <select class="form-control" ng-model="connection" ng-change="updateData(connection)">
+              <option ng-value="" value="" selected disabled readonly>Existing connections</option>
+              <option  class="list-group-item" ng-repeat="api in apis" ng-bind="api.name" ng-value="api"></option>
+            </select>
+             <div class="input-group-append">
+             <button class="btn btn-success" ng-click="request = {}" >New</button>
+            </div> 
+          </div>  
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+<!--         <ul class="nav nav-tabs col-12" id="myTab" role="tablist" ng-init="new=false">
           <li class="nav-item" ng-click="new = false"><a class="nav-link active" >Existing</a></li>
           <li class="nav-item" ng-click="new = true"> <a class="nav-link" id="home-tab" >New</a></li>
-        </ul>
-       <form ng-if="new" class="col-3">
-          <div class="form-group">
-            <input type="text" class="form-control form-control-sm" ng-model="request.name" placeholder="API Name">
+        </ul> -->
+        
+       <form class="col-3" name="F" id="F">
+       
+         <div class="form-group">
+            <input type="text" class="form-control form-control-sm" ng-model="request.name" placeholder="API Name" required>
           </div>   
          <div class="form-group">
-            <input type="text" class="form-control form-control-sm" ng-model="request.url" placeholder="URL">
+            <input type="text" class="form-control form-control-sm" ng-model="request.url" placeholder="URL" required>
           </div>
           <div class="form-group">
-            <select class="form-control form-control-sm" ng-model="request.method" >
+            <select class="form-control form-control-sm" ng-model="request.method" required>
                <option value="" selected disabled>Method</option>
                <option value="GET">GET</option>
                <option value="GET">POST</option>
             </select>
           </div>
-
+          <div class="form-group">
+            <input type="text" class="form-control form-control-sm" ng-model="request.root" placeholder="Root three (ex: records:[])">
+          </div>
           <div class="form-group ">
             <textarea class="form-control form-control-sm" ng-model="request.headers" rows="3" placeholder=" Headers: \r\n Ex:{
                 'Authorization':'Basic xxxxxxxxxxxxx',
@@ -53,20 +73,22 @@
           </div>  
 
           <div class="form-group ">
-            <input type="number" class="form-control form-control-sm" ng-model="request.refresh" placeholder="Refresh Loop Seconds">
+            <input type="text" class="form-control form-control-sm" ng-model="request.refresh" placeholder="Refresh Loop Seconds"
+                   ng-init="request.refresh = (request.refresh?request.refresh:60000)">
           </div>
           <div class="form-group ">
-            <button class="btn btn-info" type="button" ng-click="updateData()">Load</button>
+            <button class="btn btn-info" type="button" ng-disabled="F.$invalid"  ng-disabled="!request.name" ng-click="updateData()">Test API</button>
+            <button class="btn btn-danger" type="button" ng-disabled="F.$invalid" ng-click="saveRequest(request)">Save</button>
           </div>
           <div class="form-group ">
-            <button class="btn btn-success" type="button" ng-click="saveRequest(request)">Save</button>
+            <button class="btn btn-block btn-success" type="button" ng-disabled="F.$invalid || !data" data-toggle="tab" data-target="#home">Next >></button>
           </div>
 
           
         </form>
-       <div ng-if="!new" class="list-group">
+  <!--     <div ng-if="!new" class="list-group">
           <a  class="list-group-item" ng-repeat="api in apis" ng-bind="api.name" ng-click="updateData(api)"></a>
-       </div> 
+       </div> --> 
        <div class="col-9" >
           Valores
           <table class=table> 
@@ -82,7 +104,7 @@
   </div>
   <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
     <div class="row">
-      <div class="col-9">
+      <div class="col-12">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text">Report Name</span>
@@ -90,10 +112,12 @@
               <input type="text" class="form-control" ng-model="report.chart">
               <div class="input-group-append">
                 <button type="button" class="btn btn-success" ng-click="saveReport()">Save</button>
+                <button type="button" class="btn btn-info" data-toggle="tab" data-target="#contact">Edit Api</button>
               </div>
             </div>
-            <div id="output">Select your configuration and click load</div>
+            <button type="button" class="btn btn-info" data-toggle="tab" data-target="#contact">Edit Api</button>
       </div>
+      <div class="col-12"><div id="output">Select your configuration and click load</div></div>
     </div>
   </div>
 

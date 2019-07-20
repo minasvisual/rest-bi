@@ -1,10 +1,13 @@
  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Overview</h1>
-    <div class="input-group col-md-6 float-right">
-      <input type="text" ng-model="form.name" aria-label="Name" class="form-control form-control-sm">
-      <input type="text" ng-model="form.class" aria-label="Css Class" class="form-control form-control-sm">
+    <div class="input-group input-group-sm col-md-6 float-right">
+      <div class="input-group-prepend">
+        <span class="input-group-text bg-light border-0" id="basic-addon1">New Dashboard</span>
+      </div>
+      <input type="text" ng-model="form.name" aria-label="Name" class="form-control form-control-sm" placeholder="Dashboard Name" >
+      <input type="text" ng-model="form.class" aria-label="Css Class" class="form-control form-control-sm" placeholder="Css Class">
       <div class="input-group-append" id="button-addon4">
-        <button class="btn btn-sm btn-outline-secondary" ng-click="newDash(form)" type="button">Save</button>
+        <button class="btn btn-sm btn-success" ng-click="newDash(form)" type="button">Save</button>
       </div>
     </div>
    
