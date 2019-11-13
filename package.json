@@ -11,7 +11,7 @@
     "angular": "^1.7.8",
     "angular-resource": "^1.7.8",
     "bootstrap": "^4.3.1",
-    "jquery": "^1.11.2",
+    "jquery": "^3.4.1",
     "lodash": "^4.17.11",
     "pivottable": "^2.23.0",
     "plotly.js-dist": "^1.48.1",
